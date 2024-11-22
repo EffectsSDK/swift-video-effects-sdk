@@ -17,7 +17,7 @@ typedef void (^TSVBAuthCompletionHandler) (id<TSVBAuthResult>_Nullable result, N
 NS_SWIFT_NAME(SDKFactory)
 @interface TSVBSDKFactory : NSObject
 
--(void)authWithCustomerID:(nonnull NSString*)customerID completionHandler:(TSVBAuthCompletionHandler)completionHandler
+-(void)authWithCustomerID:(nonnull NSString*)customerID completionHandler:(nonnull TSVBAuthCompletionHandler)completionHandler
 	NS_SWIFT_NAME(auth(customerID:completionHandler:));
 
 - (nullable id<TSVBFrameFactory>) newFrameFactory;

@@ -67,8 +67,9 @@ NS_SWIFT_NAME(Pipeline)
 -(nullable id<TSVBFrame>) process:(nonnull id<TSVBFrame>)frame
 							error:(nullable TSVBPipelineError*)error;
 
--(nullable id<TSVBFrame>)processCVPixelBuffer:(nonnull CVPixelBufferRef)pixelBuffer
-							error:(nullable TSVBPipelineError*)error NS_SWIFT_NAME(process(pixelBuffer:error:));
+-(nullable id<TSVBFrame>)processCVPixelBuffer:(nonnull CVPixelBufferRef)pixelBuffer 
+							metalCompatible:(bool)metalCompatible
+							error:(nullable TSVBPipelineError*)error NS_SWIFT_NAME(process(pixelBuffer:metalCompatible:error:));
 
 @end
 

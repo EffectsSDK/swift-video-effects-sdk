@@ -51,7 +51,10 @@ Preparation:
 Frame processing:
 - Put your frame to [Frame](#frame) using [newFrame(format:data:bytesPerLine:width:height:makeCopy:)](#framefactory-newframe) method of [FrameFactory](#framefactory).
 - Process it through [process(frame:error:)](#pipeline-process-frame) method of **Pipeline**.
-- If your frame is [CVPixelBuffer](https://developer.apple.com/documentation/corevideo/cvpixelbuffer-q2e), you just can use [process(pixelBuffer:error:)](#pipeline-process-pixelbuffer) method of **Pipeline**.
+- If your frame is [CVPixelBuffer](https://developer.apple.com/documentation/corevideo/cvpixelbuffer-q2e), you just can use [process(pixelBuffer:metalCompatible:error:)](#pipeline-process-pixelbuffer) method of **Pipeline**.
+
+Performance tip: Prefer [process(pixelBuffer:metalCompatible:error:)](#pipeline-process-pixelbuffer) method and pass metal compatible CVPixelBuffer for better performance when Metal pipeline is active.
+
 
 Use separate **Pipeline** instances per video stream.
 
@@ -174,7 +177,9 @@ Returns [LockedFrameData](#lockedframedata) protocol which provides ability to g
 ```swift
 func toCVPixelBuffer() -> CVPixelBuffer?;
 ```
- Converts internal storage to [CVPixelBuffer](https://developer.apple.com/documentation/corevideo/cvpixelbuffer-q2e) and returns that reference if successful, otherwise returns nil. If internal storage is **CVPixelBuffer** already then returns that reference. Frame must not be used after toCVPixelBuffer() called.
+Converts internal storage to [CVPixelBuffer](https://developer.apple.com/documentation/corevideo/cvpixelbuffer-q2e) and returns that reference if successful, otherwise returns nil. 
+If internal storage is **CVPixelBuffer** already then returns that reference. Frame must not be used after toCVPixelBuffer() called.
+When Metal pipeline is active the result of **process(_ frame:error:)** and **process(pixelBuffer:metalCompatible:error:)** is metal compatible.
 
 
 ### LockedFrameData 
@@ -367,9 +372,26 @@ Parameters:
 
 <a id="pipeline-process-pixelbuffer"></a>
 ```swift
-func process(pixelBuffer: CVPixelBuffer, error: UnsafeMutablePointer<PipelineError>?) -> Frame?
+func process(pixelBuffer: CVPixelBuffer, metalCompatible: bool, error: UnsafeMutablePointer<PipelineError>?) -> Frame?
 ```
- Same as **process:error:** but expects [CVPixelBuffer](https://developer.apple.com/documentation/corevideo/cvpixelbuffer-q2e) as an argument. Supported formats are kCVPixelFormatType_32BGRA and kCVPixelFormatType_32RGBA.
+ Same as **process:error:** but expects [CVPixelBuffer](https://developer.apple.com/documentation/corevideo/cvpixelbuffer-q2e) as an argument. 
+
+Parameters:
+- **pixelBuffer: CVPixelBuffer** - CVPixelBuffer for processing.
+- **metalCompatible: bool** - Set true if CVPixelBuffer is compatible with metal. 
+- **error: UnsafeMutablePointer<PipelineError>?** - nil or pointer at variable to store error.
+
+Recommended to use metal compatible **CVPixelBuffer**. The argument has not effect if CPU pipeline.
+If you does not know *pixelBuffer* is metal compatible or not then set *metalCompatible* to false.
+**CVPixelBuffer** received within [AVCaptureVideoDataOutputSampleBufferDelegate.captureOutput(_:didOutput:from:)](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/captureoutput(_:didoutput:from:)) from [AVCaptureSession](https://developer.apple.com/documentation/avfoundation/avcapturesession) is metal compatible.
+
+For manual creating, to create metal compatible **CVPixelBuffer**, set [kCVPixelBufferMetalCompatibilityKey](https://developer.apple.com/documentation/corevideo/kcvpixelbuffermetalcompatibilitykey) attribute.
+
+ Supported formats:
+- kCVPixelFormatType_32BGRA 
+- kCVPixelFormatType_32RGBA
+- kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+- kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
 
 ### ReplacementController 
 
@@ -387,15 +409,24 @@ var backend : Backend { get set }
 ```
 Determines pipeline that performs image processing.
 
-### enum Backend 
-
-- **CPU** - CPU-based pipeline.
-- **GPU** - GPU-based pipeline.
-
 ```swift
 var segmentationPreset: SegmentationPreset { get set }
 ```
 Set the segmentation mode. Segmentation mode allow to choose combination of quality and speed of segmentation. Balanced mode is enabled by default.
+
+<a id="is-segmentation-on-neural-engine-enabled"></a>
+```swift
+var isSegmentationOnNeuralEngineEnabled: bool { get set }
+```
+Determines Apple Neural Engine acceleration is enabled.
+Has effect on system with Apple Neural Engine support.
+If host system does not support Neural Engine then the setting is ignored.
+Supported on Mac with M1 chips and newer. And iPhones of 2018 and newer. 
+
+### enum Backend 
+
+- **CPU** - CPU-based pipeline.
+- **GPU** - GPU-based pipeline.
 
 ### enum SegmentationPreset
 

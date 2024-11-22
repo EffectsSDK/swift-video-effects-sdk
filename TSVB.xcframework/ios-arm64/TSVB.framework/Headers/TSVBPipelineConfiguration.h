@@ -24,6 +24,8 @@ NS_SWIFT_NAME(PipelineConfiguration)
 
 @property(nonatomic) TSVBSegmentationPreset segmentationPreset;
 
+@property(nonatomic) bool segmentationOnNeuralEngineEnabled NS_SWIFT_NAME(isSegmentationOnNeuralEngineEnabled);
+
 @end
 
 #endif
