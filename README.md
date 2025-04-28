@@ -99,6 +99,7 @@ if (authResult.status == .active) {
 ```
 \"CUSTOMER_ID\" should be replaced by your id.
 
+<a id="sdkfactory-auth-with-key"></a>
 ```swift
 func auth(key:String) -> AuthResult
 ```
