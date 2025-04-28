@@ -99,6 +99,30 @@ if (authResult.status == .active) {
 ```
 \"CUSTOMER_ID\" should be replaced by your id.
 
+```swift
+func auth(key:String) -> AuthResult
+```
+Parameters: 
+- **key:String** - Unique client's secret key. DO NOT reveal it. See [Obtaining Effects SDK License](#obtaining-effects-sdk-license)
+
+Offline authorization with a secret key.
+Returns [AuthResult](#authresult)
+
+Authorizes an instance of [SDKFactory](#SDKFactory) similar to [auth(customerID:)](#sdkfactory-auth), but performs license verification without web requests.  
+Internet connection is not required.
+
+Usage example
+```swift
+let result = sdkFactory.auth(key: "Your_secret_key")
+guard (result.status == .active) else {
+    handleAuthorizationFailure(result: result)
+    return
+}
+
+sdkFrameFactory = factory.newFrameFactory()
+sdkPipeline = factory.newPipeline()
+```
+
 <a id="sdkfactory-newframefactory"></a>
 ```swift
 func newFrameFactory() -> FrameFactory?
