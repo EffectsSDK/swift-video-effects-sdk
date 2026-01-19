@@ -10,6 +10,10 @@ Also, there is [the Sample Xcode project with Video Effects SDK integration](htt
 
 To receive a Effects SDK license please fill in the contact form on [effectssdk.com](https://effectssdk.com/contacts) website.
 
+## Documentation
+
+[Documentation Website](https://effectssdk.ai/sdk/ios/documentation/tsvb/)
+
 ## Technical Details
 
 - SDK available for iOS 13 and newer.
@@ -465,3 +469,4 @@ Supported on Mac with M1 chips and newer. And iPhones of 2018 and newer.
 - **active** - Authorization is succeeded and the license is active. SDK can be used to enhance your video.
 - **inactive** - Authorization is failed because the license is deactivated or no such license.
 - **expired** - Authorization is failed because the license is expired. Contact us to update it.
+
