@@ -16,8 +16,8 @@ let package = Package(
         .target(name: "TSVBPackage", dependencies: ["TSVB"]),
         .binaryTarget(
             name: "TSVB", 
-            url: "https://github.com/EffectsSDK/swift-video-effects-sdk/releases/download/2.5.1/TSVB.xcframework-iOS-2.5.1.112678-stable.zip",
-            checksum: "d2e179f59906fdd450c0c2205c4e8ecf714ad1d5c1211355342d1b3b928bbcd5"
+            url: "https://github.com/EffectsSDK/swift-video-effects-sdk/releases/download/2.6.0/TSVB.xcframework-iOS-2.6.0.118560-stable.zip",
+            checksum: "03dcde7c55565b5d506273967faa2cc26dcbbb40937d37c20baa6e8fe1abc2a9"
         )
     ]
 )
